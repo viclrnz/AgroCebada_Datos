@@ -1,0 +1,32 @@
+# Credenciales.
+.env
+.env.*
+!.env.example
+
+# Python.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Entornos.
+.venv/
+venv/
+
+# Logs y salidas.
+logs/*
+!logs/.gitkeep
+data/interim/
+data/processed/
+
+# Artefactos de modelo.
+*.pkl
+*.joblib
+
+# SO / IDE.
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

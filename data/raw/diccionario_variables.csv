@@ -1,0 +1,96 @@
+columna,rol,fuente,paso,unidad,tipo,min,max,pct_nan,smd_pred_vs_entr
+id_poligono,identidad,Tabla de parcelas,1,adimensional / índice,object,,,0.0,
+municipio,identidad,Tabla de parcelas,1,adimensional / índice,str,,,0.0,
+estado,identidad,Tabla de parcelas,1,adimensional / índice,str,,,0.0,
+conjunto,identidad,Tabla de parcelas,1,adimensional / índice,str,,,0.0,
+area_ha_geod,features,Geometría de la parcela (WGS84),1,adimensional / índice,float64,0.3516568295059289,64.30153189301642,0.0,0.01
+rendimiento_t_ha,objetivo,Tabla de parcelas,1,ha,float64,2.0,5.59,29.9,
+diag_y_redondo,diagnostico,Tabla de parcelas,1,adimensional / índice,boolean,False,True,29.9,
+diag_y_resolucion,diagnostico,Tabla de parcelas,1,adimensional / índice,float64,0.01,0.5,29.9,
+elev_media_m,features,INEGI CEM 120 m,3,m,float64,2496.6484675617467,2906.0395204119677,0.0,-0.15
+elev_std_m,features,INEGI CEM 120 m,3,m,float64,0.0,15.724889608216635,0.0,-0.14
+elev_min_m,podadas,INEGI CEM 120 m,3,m,float64,2493.0,2893.0,0.0,
+elev_max_m,podadas,INEGI CEM 120 m,3,m,float64,2500.0,2912.0,0.0,
+topo_cobertura_pix,diagnostico,Tabla de parcelas,1,adimensional / índice,float64,0.24254021048545837,44.35131967975758,0.0,
+pend_media_grados,features,INEGI CEM 120 m,3,grados,float64,0.28186451539413515,9.396394661752522,0.0,-0.02
+pend_p90_grados,features,INEGI CEM 120 m,3,grados,float64,0.3247378170490265,11.971110343933105,0.0,0.02
+pend_max_grados,features,INEGI CEM 120 m,3,grados,float64,0.3774636387825012,17.851953506469727,0.0,0.1
+pend_cobertura_pix,diagnostico,INEGI CEM 120 m,3,adimensional / índice,float64,0.11763020232319832,44.35131967975758,0.0,
+ratio_cobertura_area,diagnostico,Tabla de parcelas,1,adimensional / índice,float64,0.7593801385994039,1.0000000284517916,0.0,
+ratio_cobertura_pend,diagnostico,Tabla de parcelas,1,adimensional / índice,float64,0.02761326850723433,1.0,0.0,
+diag_topo_pocos_pix,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,True,0.0,
+diag_topo_nodata,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,True,0.0,
+z_pixel_clima_m,diagnostico,Tabla de parcelas,1,m,float64,2518.649169921875,2863.654052734375,0.0,
+clima_pixel_id,identidad,Tabla de parcelas,1,adimensional / índice,str,,,0.0,
+dz_pixel_m,features,INEGI CEM 120 m vs. malla de clima 0.05°,3,m,float64,-137.75234066108305,213.46063051852434,0.0,-0.15
+pl_n_picos,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,int64,1,2,0.0,0.18
+pl_sos20_doy,features,"Planet, curva Whittaker λ=1000",4,día del año,int64,147,237,0.0,0.13
+pl_sos50_doy,features,"Planet, curva Whittaker λ=1000",4,día del año,int64,161,247,0.0,-0.03
+pl_centro_pico_doy,features,"Planet, curva Whittaker λ=1000",4,día del año,int64,186,286,0.0,-0.07
+pl_eos50_doy,features,"Planet, curva Whittaker λ=1000",4,día del año,int64,257,320,0.0,-0.13
+pl_eos20_doy,features,"Planet, curva Whittaker λ=1000",4,día del año,int64,288,328,0.0,-0.06
+pl_duracion_dias,podadas,"Planet, curva Whittaker λ=1000",4,días,int64,88,175,0.0,
+pl_dias_meseta,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,int64,14,86,0.0,-0.12
+pl_caida_intra_ciclo,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.0,0.1444295267100934,0.0,-0.17
+pl_ndvi_pico,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.534413743124664,0.8851471132339107,0.0,-0.09
+pl_ndvi_base,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.17488123513650977,0.46911447624228253,0.0,0.2
+pl_amplitud,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.29455468417966746,0.6792883849294218,0.0,-0.21
+pl_integral_ciclo,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,20.6953926281284,70.34081965314323,0.0,-0.16
+pl_tasa_subida,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.003011851544035427,0.01621119485198101,0.0,0.15
+pl_tasa_bajada,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.003560989069861116,0.021689431073093464,0.0,-0.14
+pl_hueco_max_critico,diagnostico,"Planet, curva Whittaker λ=1000",4,adimensional / índice,int64,4,26,0.0,
+diag_sin_ciclo,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,False,0.0,
+diag_ciclo_ambiguo,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,True,0.0,
+pl_ndvi_max_abr_oct,podadas,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.534413743124664,0.8851471132339107,0.0,
+pl_ndvi_int_abr_oct,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,78.9836277546786,126.59311337310709,0.0,0.1
+pl_ndvi_media_abr_oct,podadas,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,0.369082372685414,0.5915566045472294,0.0,
+pl_lai_max_ciclo,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,1.734738779904978,3.5037338671262277,0.0,-0.11
+pl_lai_int_ciclo,features,"Planet, curva Whittaker λ=1000",4,adimensional / índice,float64,158.36919063598262,400.61468428361667,0.0,-0.13
+s2_n_picos,features,"Sentinel-2, curva Whittaker λ=1000",4,adimensional / índice,int64,1,2,0.0,0.22
+s2_sos50_doy,features,"Sentinel-2, curva Whittaker λ=1000",4,día del año,int64,157,250,0.0,-0.1
+s2_centro_pico_doy,features,"Sentinel-2, curva Whittaker λ=1000",4,día del año,int64,194,293,0.0,-0.12
+s2_eos50_doy,podadas,"Sentinel-2, curva Whittaker λ=1000",4,día del año,int64,257,320,0.0,
+s2_ndvi_pico,features,"Sentinel-2, curva Whittaker λ=1000",4,adimensional / índice,float64,0.44902073298352585,0.8236255583407345,0.0,-0.11
+s2_integral_ciclo,features,"Sentinel-2, curva Whittaker λ=1000",4,adimensional / índice,float64,18.684659338287418,67.70210742532063,0.0,-0.14
+s2_ndvi_int_abr_oct,features,"Sentinel-2, curva Whittaker λ=1000",4,adimensional / índice,float64,60.548452677869896,104.22423508964266,0.0,0.09
+diag_s2_sin_ciclo,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,False,0.0,
+diag_fenologia_discrepante,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,True,0.0,
+ac_lluvia_pre_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,48.10754132224247,380.9994567632675,0.0,0.02
+ac_lluvia_veg_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,28.304460525512695,693.2884662151337,0.0,-0.03
+ac_lluvia_flor_mm,podadas,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,75.8336591720581,331.6239948272705,0.0,
+ac_lluvia_llen_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,0.0,663.8617630004883,0.0,0.12
+ac_lluvia_ciclo_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,274.6857393682003,1157.0916266441345,0.0,0.1
+ac_dias_lluvia_ciclo,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,int64,16,61,0.0,-0.1
+ac_lluvia_max_dia_ciclo_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,25.001665115356445,92.7145767211914,0.0,0.11
+ac_racha_seca_max_flor,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,int64,4,19,0.0,-0.1
+ac_racha_seca_max_ciclo,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,int64,9,41,0.0,-0.05
+ac_gdd_ciclo,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,float64,1082.4704993026721,2291.371272042904,0.0,-0.12
+ac_gdd_hasta_flor,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,float64,385.5600937354605,1710.3166575183284,0.0,-0.18
+ac_eto_ciclo_mm,podadas,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,309.29865884766485,670.5785017001155,0.0,
+ac_balance_ciclo_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,-64.51425727252985,547.2731631253055,0.0,0.22
+ac_balance_flor_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,-50.563519093840625,216.25389606039334,0.0,0.13
+ac_balance_llen_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,-130.38592810364526,229.4234260740412,0.0,0.13
+ac_lluvia_ciclo_anom_mm,features,CHIRPS diario + CHIRTS corregido por elevación,5,mm,float64,7.924894268052526,441.6116285299262,0.0,0.12
+ac_lluvia_ciclo_anom_rel,features,CHIRPS diario + CHIRTS corregido por elevación,5,adimensional / índice,float64,0.014713879229294902,0.6519506094824175,0.0,0.1
+soil_arcilla_pct,features,SoilGrids 2.0 (0–30 cm),6,%,float64,20.431431933605843,31.821164151356072,0.0,0.14
+soil_arena_pct,features,SoilGrids 2.0 (0–30 cm),6,%,float64,38.40135844599029,49.23536005848665,0.0,-0.05
+soil_soc_g_kg,features,SoilGrids 2.0 (0–30 cm),6,g/kg,float64,13.895059230217957,27.866666666666667,0.0,0.08
+soil_densidad_g_cm3,features,SoilGrids 2.0 (0–30 cm),6,g/cm³,float64,1.1576916317155987,1.3362090452057978,0.0,-0.07
+soil_ph,features,SoilGrids 2.0 (0–30 cm),6,adimensional / índice,float64,5.995015391901491,7.106664206036745,0.0,-0.16
+soil_limo_pct,features,SoilGrids 2.0 (0–30 cm),6,%,float64,24.188301901526714,32.468985507246366,0.0,-0.15
+soil_agua_disp_mm,features,SoilGrids 2.0 (0–30 cm),6,mm,float64,36.18051316347111,41.69740107434012,0.0,-0.03
+era5_dias_tmax28_flor,podadas,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,int64,0,0,0.0,
+era5_dias_tmax28_llen,podadas,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,int64,0,0,0.0,
+era5_dias_tmax30_flor,podadas,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,int64,0,0,0.0,
+era5_dias_tmax30_llen,podadas,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,int64,0,0,0.0,
+era5_tmax_media_flor_c,features,ERA5-Land diario (Tmax con delta CHIRTS),6,°C,float64,21.16295391702488,23.920068351955077,0.0,0.14
+era5_vpd_medio_flor_kpa,features,ERA5-Land diario (Tmax con delta CHIRTS),6,kPa,float64,0.1585860963423329,0.4042597227530711,0.0,0.07
+era5_vpd_medio_llen_kpa,features,ERA5-Land diario (Tmax con delta CHIRTS),6,kPa,float64,0.18896231350007545,0.44031095189924235,0.0,-0.07
+era5_sm1_siembra,features,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,float64,0.28130662706163195,0.42077602810329856,0.0,-0.07
+era5_sm2_flor,features,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,float64,0.2853890695879537,0.40564217105988526,0.0,-0.07
+era5_sm2_llen,features,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,float64,0.2684616512722439,0.3992536427725075,0.0,0.05
+era5_sm2_min_llen,features,ERA5-Land diario (Tmax con delta CHIRTS),6,adimensional / índice,float64,0.24860127766927084,0.3611106872558594,0.0,0.15
+era5_rs_ciclo_mj_m2,features,ERA5-Land diario (Tmax con delta CHIRTS),6,MJ/m²,float64,1707.7575427351073,3456.7833867351073,0.0,-0.15
+era5_apar_ciclo_mj_m2,features,ERA5-Land diario (Tmax con delta CHIRTS),6,MJ/m²,float64,405.7926108694421,1019.9145085667918,0.0,-0.09
+era5_apar_post_pico_mj_m2,features,ERA5-Land diario (Tmax con delta CHIRTS),6,MJ/m²,float64,209.3666989767609,706.7952238436151,0.0,0.03
+diag_era5_vecino,diagnostico,Tabla de parcelas,1,adimensional / índice,bool,False,True,0.0,

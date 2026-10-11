@@ -1,0 +1,6 @@
+pandas>=2.2,<3.1
+pyarrow>=15
+SQLAlchemy>=2.0.30,<2.1
+pg8000>=1.31,<2
+python-dotenv>=1.0,<2
+pytest>=8,<9
