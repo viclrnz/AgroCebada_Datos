@@ -11,6 +11,10 @@ data/raw/ (entregable de Dana)
    │  transform → tipos estables + metadatos de linaje (run_id, fecha, sha256)
    ▼  load      → UPSERT por chunks en una sola transacción + bitácora
 Supabase: matriz_caracteristicas · etl_ejecuciones · v_parcelas_app
+
+data/predictions/ (Modelado) + data/raw/parcelas/ (shapefile WGS84)
+   ▼  rendimientos → elige el modelo vigente, valida 1 a 1 contra el maestro y hace UPSERT
+Supabase: rendimientos_estimados → v_parcelas_app
 ```
 
 ## Estructura
@@ -24,10 +28,13 @@ Supabase: matriz_caracteristicas · etl_ejecuciones · v_parcelas_app
 | `src/transform.py` | Normalización de tipos y linaje; **no** imputa ni escala |
 | `src/schema.py` | Genera el DDL desde `diccionario_variables.csv` |
 | `src/load.py` | Migraciones, upsert idempotente y bitácora |
+| `src/rendimientos.py` | Tabla principal del Front: rendimiento (observado o modelo vigente), ubicación y superficie |
+| `src/parcelas.py` | Lee el shapefile y calcula latitud/longitud (centroide o punto interior) |
 | `sql/` | Migraciones idempotentes, ejecutadas en orden |
 | `tests/` | Pruebas del contrato (`pytest -q`) |
-| `data/raw/` | Entregables versionados de Preprocesamiento |
-| `notebooks/` | Notebooks de Dana (trazabilidad del maestro) |
+| `data/raw/` | Entregables versionados de Preprocesamiento y `parcelas/` (shapefile) |
+| `data/predictions/` | Predicciones de Modelado (ver `docs/modelo_sin_pkl.md`) |
+| `notebooks/` | EDA, preprocesamiento del RF y modelado, numerados en orden |
 
 ## Puesta en marcha (Windows + Miniconda)
 
@@ -35,10 +42,11 @@ Supabase: matriz_caracteristicas · etl_ejecuciones · v_parcelas_app
 conda activate agrocebada_env
 pip install -r requirements.txt
 copy .env.example .env          # y completa DB_PASSWORD, DB_USER, DB_HOST
-pytest -q                       # 10 pruebas en verde
+pytest -q                       # 23 pruebas en verde
 python main.py validar          # contrato sin tocar la BD
 python main.py init-db          # crea tablas, bitácora y vista (una vez, o tras cambiar sql/)
 python main.py run              # carga
+python main.py rendimientos     # rendimientos estimados (modelo vigente: svr_12vars)
 ```
 
 Códigos de salida: `0` OK, `1` error inesperado, `2` contrato violado (no se cargó nada).

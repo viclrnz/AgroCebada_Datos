@@ -23,13 +23,19 @@ RAW_DIR = ROOT_DIR / "data" / "raw"
 MAESTRO_PATH = RAW_DIR / "maestro_agrocebada.parquet"   # Fuente principal; conserva los tipos.
 DICCIONARIO_PATH = RAW_DIR / "diccionario_variables.csv"
 ROLES_PATH = RAW_DIR / "roles_columnas.json"
+PARCELAS_PATH = RAW_DIR / "parcelas" / "Parcelas_Reto_AGC_CONJUNTO"   # Shapefile WGS84, sin extensión.
 LOG_DIR = ROOT_DIR / "logs"
+# Salidas de Modelado que consume la app.
+PREDICTIONS_DIR = ROOT_DIR / "data" / "predictions"
+COMPARACION_PATH = PREDICTIONS_DIR / "comparacion_modelos_rendimiento.csv"
 
 # Parámetros de la tabla destino.
 TABLA_DESTINO = os.getenv("ETL_TABLA_DESTINO", "matriz_caracteristicas")
 ESQUEMA_DESTINO = os.getenv("ETL_ESQUEMA_DESTINO", "public")
 LLAVE_PRIMARIA = "id_poligono"
 CHUNK_SIZE = int(os.getenv("ETL_CHUNK_SIZE", "50"))
+TABLA_RENDIMIENTOS = os.getenv("ETL_TABLA_RENDIMIENTOS", "rendimientos_estimados")
+MODELO_VIGENTE = os.getenv("ETL_MODELO_VIGENTE", "svr_12vars")
 
 
 @dataclass(frozen=True)

@@ -6,6 +6,8 @@ Comandos:
     python main.py init-db
     python main.py run
     python main.py run --input otra/ruta/maestro.parquet --log-level DEBUG
+    python main.py rendimientos
+    python main.py rendimientos --modelo rf_12vars
 
 Códigos de salida: 0 si termina bien, 1 ante un error inesperado y 2 si
 el dataset no cumple el contrato.
@@ -71,6 +73,45 @@ def cmd_run(args) -> int:
         return 1
 
 
+def cmd_rendimientos(args) -> int:
+    import pandas as pd
+
+    from src.extract import _sha256
+    from src.load import registrar_ejecucion, upsert
+    from src.parcelas import leer_parcelas
+    from src.rendimientos import preparar_rendimientos, validar_comparacion, validar_parcelas
+
+    engine = settings.get_engine()
+    inicio = datetime.now(timezone.utc)
+    bitacora = dict(run_id=None, inicio=inicio, filas_fuente=None, filas_afectadas=None,
+                    fuente_sha256=None, advertencias=None)
+    try:
+        if not args.input.exists():
+            raise FileNotFoundError(f"No se encontró el insumo: {args.input}")
+        comparacion = pd.read_csv(args.input)
+        huella = _sha256(args.input)
+        bitacora.update(filas_fuente=len(comparacion), fuente_sha256=huella)
+
+        maestro = extract().maestro
+        parcelas = leer_parcelas(args.parcelas)
+        validar_comparacion(comparacion, maestro, args.modelo)
+        validar_parcelas(parcelas, maestro)
+        df_final, run_id = preparar_rendimientos(comparacion, maestro, parcelas, args.modelo, huella)
+        bitacora["run_id"] = run_id
+
+        bitacora["filas_afectadas"] = upsert(df_final, engine, tabla=settings.TABLA_RENDIMIENTOS,
+                                             chunk_size=args.chunk_size)
+        registrar_ejecucion(engine, estado="OK", mensaje=f"rendimientos modelo={args.modelo}", **bitacora)
+        return 0
+    except ContractError as e:
+        _registrar_fallo(engine, bitacora, "ERROR_CONTRATO", f"rendimientos: {e}")
+        return 2
+    except Exception as e:
+        log.exception("Fallo de la carga de rendimientos")
+        _registrar_fallo(engine, bitacora, "ERROR", f"rendimientos: {type(e).__name__}: {e}")
+        return 1
+
+
 def _registrar_fallo(engine, bitacora, estado, mensaje):
     import uuid
     from src.load import registrar_ejecucion
@@ -87,12 +128,18 @@ def build_parser() -> argparse.ArgumentParser:
         ("validar", cmd_validar, "Valida el maestro contra el contrato (sin BD)"),
         ("init-db", cmd_init_db, "Crea/actualiza tablas y vistas en Supabase"),
         ("run", cmd_run, "Ejecuta el pipeline completo con upsert"),
+        ("rendimientos", cmd_rendimientos, "Carga los rendimientos estimados que muestra la app"),
     ):
         sp = sub.add_parser(nombre, help=ayuda)
         sp.set_defaults(func=fn)
-        if nombre != "init-db":
+        if nombre in ("validar", "run"):
             sp.add_argument("--input", type=Path, default=settings.MAESTRO_PATH)
-        if nombre == "run":
+        if nombre == "rendimientos":
+            sp.add_argument("--input", type=Path, default=settings.COMPARACION_PATH)
+            sp.add_argument("--modelo", default=settings.MODELO_VIGENTE)
+            sp.add_argument("--parcelas", type=Path, default=settings.PARCELAS_PATH,
+                            help="Shapefile de parcelas sin extensión")
+        if nombre in ("run", "rendimientos"):
             sp.add_argument("--chunk-size", type=int, default=settings.CHUNK_SIZE)
     return p
 
