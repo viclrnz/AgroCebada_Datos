@@ -35,7 +35,7 @@ Notas:
 
 Notas:
 - `00_random_forest_base.ipynb` queda como evidencia de la comparación anterior. Su SVR de 12 variables fue superado por el ensamble de 16 y sus respuestas bonus las reemplaza el notebook 02.
-- El modelo final es el ensamble de 16 variables (0.16 Random Forest + 0.84 SVR). En `comparacion_rendimientos.csv` es la columna `M6_Ensamble_Final_SBE_16vars`. Las métricas están en el [README principal](../README.md#modelo-final).
+- El modelo final es el Modelo 5: Ensamble Final tras selección de variables SBE (16 variables predictoras), 0.16 Random Forest + 0.84 SVR. En `comparacion_rendimientos.csv` es la columna `M6_Ensamble_Final_SBE_16vars`. Las métricas están en el [README principal](../README.md#modelo-final).
 - Las salidas del paso 2 se copian a `data/predictions/` como `comparacion_modelos_rendimiento.csv` y `rendimientos_estimados.csv`. Luego `python main.py rendimientos` las carga a Supabase.
-- `dataset_62vars.csv` trae las 62 variables originales para reproducir el modelo M1.
+- `dataset_62vars.csv` trae las 62 variables originales para reproducir el Modelo base (Random Forest Original, 62 variables).
 - El notebook 01 necesita `python-dotenv` y un `.env` con `DB_USER`, `DB_PASSWORD` y `DB_HOST` (ver `.env.example`).

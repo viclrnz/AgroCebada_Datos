@@ -21,7 +21,7 @@ De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Pa
 | `sql/` | Migraciones de la base (tablas, vistas y rol del chatbot), en orden `001` a `007` |
 | `tests/` | Pruebas con pytest |
 | `data/raw/` | Maestro, diccionario de variables, roles de columnas y shapefile de parcelas |
-| `data/predictions/` | Predicciones de los modelos M1 a M6 |
+| `data/predictions/` | Predicciones de los modelos (del Modelo base al Modelo 5) |
 | `notebooks/` | Notebooks por etapa: etl, eda y modelado |
 | `docs/` | Auditoría del maestro y explicación de por qué no hay `.pkl` |
 | `logs/` | Log del ETL (`etl.log`) |
@@ -57,16 +57,17 @@ La carga es idempotente: si se corre dos veces con el mismo maestro, la segunda 
 
 Métricas de validación cruzada sobre las 138 parcelas con rendimiento conocido (RMSE y MAE en t/ha):
 
-| Modelo | `--modelo` | RMSE | MAE | R² |
+| Modelo | clave `--modelo` | RMSE | MAE | R² |
 |---|---|---|---|---|
-| M1 Random Forest, 62 variables | `rf_62vars` | 0.575 | 0.433 | 0.541 |
-| M2 Random Forest, 19 variables | `rf_19vars` | 0.546 | 0.416 | 0.586 |
-| M3 Random Forest con GridSearch, 19 variables | `rf_gridsearch_19vars` | 0.536 | 0.401 | 0.601 |
-| M4 SVR RBF, 19 variables | `svr_19vars` | 0.510 | 0.390 | 0.638 |
-| M5 Ensamble, 19 variables | `ensamble_19vars` | 0.506 | 0.386 | 0.644 |
-| M6 Ensamble, 16 variables (usado) | `ensamble_16vars` | 0.486 | 0.374 | 0.672 |
+| Modelo base: Random Forest Original (62 variables predictoras, KFold simple) | `rf_62vars` | 0.575 | 0.433 | 0.541 |
+| Modelo 1: Random Forest con Permutation Importance Out-of-Fold (OOF) (19 variables predictoras) | `rf_19vars` | 0.546 | 0.416 | 0.586 |
+| Modelo 2: Random Forest con GridSearchCV (19 variables predictoras) | `rf_gridsearch_19vars` | 0.536 | 0.401 | 0.601 |
+| Modelo de prueba: SVR con StandardScaler y kernel RBF (19 variables predictoras) | `svr_19vars` | 0.510 | 0.390 | 0.638 |
+| Modelo 3: Ensamble con Blending: 0.27 Random Forest + 0.73 SVR (19 variables predictoras) | `ensamble_19vars` | 0.506 | 0.386 | 0.644 |
+| Modelo 4: Ensamble con Blending + Selección de Variables con Sequential Backward Elimination (16 variables predictoras) | sin clave | 0.486 | no reportado | 0.671 |
+| Modelo 5: Ensamble Final tras selección de variables SBE (16 variables predictoras) (usado) | `ensamble_16vars` | 0.486 | 0.374 | 0.672 |
 
-El modelo usado es M6: 0.16 Random Forest + 0.84 SVR con 16 variables elegidas por selección hacia atrás.
+El modelo usado es el Modelo 5: 0.16 Random Forest + 0.84 SVR con 16 variables elegidas por Sequential Backward Elimination. El Modelo 4 es un paso intermedio y no tiene columna en el archivo de predicciones.
 
 No se exportó el modelo entrenado (`.pkl`). La app no hace inferencia, solo lee las predicciones ya cargadas. Los detalles están en `docs/modelo_sin_pkl.md`.
 
