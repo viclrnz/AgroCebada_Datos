@@ -34,7 +34,7 @@ Supabase: rendimientos_estimados → v_parcelas_app
 | `tests/` | Pruebas del contrato (`pytest -q`) |
 | `data/raw/` | Entregables versionados de Preprocesamiento y `parcelas/` (shapefile) |
 | `data/predictions/` | Predicciones de Modelado (ver `docs/modelo_sin_pkl.md`) |
-| `notebooks/` | EDA, preprocesamiento del RF y modelado, numerados en orden |
+| `notebooks/` | Por etapa (etl, eda, modelado); ver `notebooks/README.md` |
 
 ## Puesta en marcha (Windows + Miniconda)
 
