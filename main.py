@@ -7,7 +7,7 @@ Comandos:
     python main.py run
     python main.py run --input otra/ruta/maestro.parquet --log-level DEBUG
     python main.py rendimientos
-    python main.py rendimientos --modelo rf_12vars
+    python main.py rendimientos --modelo svr_19vars
 
 Códigos de salida: 0 si termina bien, 1 ante un error inesperado y 2 si
 el dataset no cumple el contrato.
@@ -79,7 +79,7 @@ def cmd_rendimientos(args) -> int:
     from src.extract import _sha256
     from src.load import registrar_ejecucion, upsert
     from src.parcelas import leer_parcelas
-    from src.rendimientos import preparar_rendimientos, validar_comparacion, validar_parcelas
+    from src.rendimientos import leer_comparacion, preparar_rendimientos, validar_comparacion, validar_parcelas
 
     engine = settings.get_engine()
     inicio = datetime.now(timezone.utc)
@@ -88,7 +88,7 @@ def cmd_rendimientos(args) -> int:
     try:
         if not args.input.exists():
             raise FileNotFoundError(f"No se encontró el insumo: {args.input}")
-        comparacion = pd.read_csv(args.input)
+        comparacion = leer_comparacion(args.input)
         huella = _sha256(args.input)
         bitacora.update(filas_fuente=len(comparacion), fuente_sha256=huella)
 

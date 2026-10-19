@@ -49,4 +49,4 @@ COMMENT ON COLUMN public.rendimientos_estimados.latitud IS 'WGS84 | centroide o 
 COMMENT ON COLUMN public.rendimientos_estimados.longitud IS 'WGS84 | centroide o punto interior de la parcela';
 COMMENT ON COLUMN public.rendimientos_estimados.rendimiento_estimado_t_ha IS 'Rendimiento a mostrar | t/ha, 2 decimales';
 COMMENT ON COLUMN public.rendimientos_estimados.origen IS 'observado (ENTRENAMIENTO) o modelo (PREDICCION)';
-COMMENT ON COLUMN public.rendimientos_estimados.modelo IS 'Modelo que generó el valor, p. ej. svr_12vars; nulo si es observado';
+COMMENT ON COLUMN public.rendimientos_estimados.modelo IS 'Modelo que generó el valor, p. ej. ensamble_16vars; nulo si es observado';

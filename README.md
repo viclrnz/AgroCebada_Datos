@@ -46,7 +46,7 @@ pytest -q                       # 23 pruebas en verde
 python main.py validar          # contrato sin tocar la BD
 python main.py init-db          # crea tablas, bitácora y vista (una vez, o tras cambiar sql/)
 python main.py run              # carga
-python main.py rendimientos     # rendimientos estimados (modelo vigente: svr_12vars)
+python main.py rendimientos     # rendimientos estimados (modelo vigente: ensamble_16vars)
 ```
 
 Códigos de salida: `0` OK, `1` error inesperado, `2` contrato violado (no se cargó nada).

@@ -35,7 +35,7 @@ ESQUEMA_DESTINO = os.getenv("ETL_ESQUEMA_DESTINO", "public")
 LLAVE_PRIMARIA = "id_poligono"
 CHUNK_SIZE = int(os.getenv("ETL_CHUNK_SIZE", "50"))
 TABLA_RENDIMIENTOS = os.getenv("ETL_TABLA_RENDIMIENTOS", "rendimientos_estimados")
-MODELO_VIGENTE = os.getenv("ETL_MODELO_VIGENTE", "svr_12vars")
+MODELO_VIGENTE = os.getenv("ETL_MODELO_VIGENTE", "ensamble_16vars")
 
 
 @dataclass(frozen=True)

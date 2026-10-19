@@ -2,7 +2,8 @@
 Prepara la tabla de rendimientos que muestra la app.
 
 Modelado no exporta un `.pkl`; entrega `comparacion_modelos_rendimiento.csv`
-con las predicciones de cada modelo. Aquí se elige el modelo vigente: las
+con las predicciones de cada modelo (predicciones de validación cruzada en
+ENTRENAMIENTO). Aquí se elige el modelo vigente: las
 parcelas de ENTRENAMIENTO conservan su rendimiento observado y las de
 PREDICCION toman el valor del modelo. La tabla también lleva los datos que
 muestra la app (estado, municipio, superficie y coordenadas) para que el Front
@@ -21,11 +22,14 @@ from src.contracts import ContractError
 
 log = logging.getLogger(__name__)
 
-# Nombre corto del modelo -> columna en el archivo de comparación.
+# Nombre corto del modelo -> columna en el archivo de comparación (ya en minúsculas).
 MODELOS = {
-    "svr_12vars": "rendimiento_pred_svr_12vars",
-    "rf_12vars": "rendimiento_pred_rf_12vars",
-    "rf_50vars": "rendimiento_pred_50vars",
+    "rf_62vars": "m1_rf_original_62vars",
+    "rf_19vars": "m2_rf_subconjunto_optimo_19vars",
+    "rf_gridsearch_19vars": "m3_rf_optimizado_gridsearch_19vars",
+    "svr_19vars": "m4_svr_rbf_19vars",
+    "ensamble_19vars": "m5_ensamble_19vars_27rf_73svr",
+    "ensamble_16vars": "m6_ensamble_final_sbe_16vars",
 }
 DECIMALES = 2
 COLUMNAS = ["id_poligono", "estado", "municipio", "conjunto", "superficie_ha", "latitud", "longitud",
@@ -33,6 +37,13 @@ COLUMNAS = ["id_poligono", "estado", "municipio", "conjunto", "superficie_ha", "
 # Caja que cubre Hidalgo, Puebla y Tlaxcala; detecta coordenadas invertidas o en otra proyección.
 LAT_RANGO, LON_RANGO = (18.0, 21.5), (-99.5, -97.0)
 TOLERANCIA_AREA_HA = 0.05
+
+
+def leer_comparacion(ruta) -> pd.DataFrame:
+    """Lee el archivo de Modelado; sus encabezados vienen en mayúsculas (ID_POLIGONO, CONJUNTO...)."""
+    comparacion = pd.read_csv(ruta)
+    comparacion.columns = comparacion.columns.str.strip().str.lower()
+    return comparacion
 
 
 def validar_comparacion(comparacion: pd.DataFrame, maestro: pd.DataFrame, modelo: str) -> None:
