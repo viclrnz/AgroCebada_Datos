@@ -1,77 +1,77 @@
 # AgroCebada_Datos
 
-Pipeline ETL del **Proyecto AgroCebada 2026** (FIRA, equipo SocieData). Toma el Dataset Maestro
-de Preprocesamiento, lo valida contra un contrato de datos y lo carga de forma idempotente
-a Supabase (PostgreSQL), que es la fuente única de la verdad para Modelado y para la app Django.
+ETL y datos del Reto AgroCebada 2026 (FIRA), equipo SocieData. El repositorio arma la matriz de características de 197 parcelas de cebada, la valida y la carga a PostgreSQL en Supabase, que es la base que usa la app web.
 
-```
-data/raw/ (entregable de Dana)
-   │  extract   → lee Parquet + diccionario + roles, calcula SHA-256
-   │  contrato  → esquema, tipos, llave, nulos, rangos físicos, coherencia agronómica
-   │  transform → tipos estables + metadatos de linaje (run_id, fecha, sha256)
-   ▼  load      → UPSERT por chunks en una sola transacción + bitácora
-Supabase: matriz_caracteristicas · etl_ejecuciones · v_parcelas_app
+De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Para las otras 59 el rendimiento se estima con el modelo final.
 
-data/predictions/ (Modelado) + data/raw/parcelas/ (shapefile WGS84)
-   ▼  rendimientos → elige el modelo vigente, valida 1 a 1 contra el maestro y hace UPSERT
-Supabase: rendimientos_estimados → v_parcelas_app
-```
+## Flujo
 
-## Estructura
+1. Los notebooks de `notebooks/etl/` generan el maestro (`data/raw/maestro_agrocebada.parquet`), el diccionario de variables y los roles de columnas.
+2. `python main.py run` valida el maestro contra un contrato de datos y lo carga a la tabla `matriz_caracteristicas`.
+3. Los notebooks de `notebooks/modelado/` entrenan los modelos y dejan las predicciones en `data/predictions/`.
+4. `python main.py rendimientos` toma las predicciones del modelo elegido, agrega ubicación y superficie desde el shapefile y las carga a `rendimientos_estimados`, que es lo que lee la app.
 
-| Ruta | Contenido |
+## Estructura del repositorio
+
+| Carpeta | Qué contiene |
 |---|---|
-| `config/settings.py` | Rutas, variables de entorno y engine SQLAlchemy (`pg8000` + SSL) |
-| `config/logging_config.py` | Logs a consola y a `logs/etl.log` (rotativo) |
-| `src/extract.py` | Lectura de insumos y huella SHA-256 |
-| `src/contracts.py` | Contrato de datos (ERROR detiene la carga, WARNING solo avisa) |
-| `src/transform.py` | Normalización de tipos y linaje; **no** imputa ni escala |
-| `src/schema.py` | Genera el DDL desde `diccionario_variables.csv` |
-| `src/load.py` | Migraciones, upsert idempotente y bitácora |
-| `src/rendimientos.py` | Tabla principal del Front: rendimiento (observado o modelo vigente), ubicación y superficie |
-| `src/parcelas.py` | Lee el shapefile y calcula latitud/longitud (centroide o punto interior) |
-| `sql/` | Migraciones idempotentes, ejecutadas en orden |
-| `tests/` | Pruebas del contrato (`pytest -q`) |
-| `data/raw/` | Entregables versionados de Preprocesamiento y `parcelas/` (shapefile) |
-| `data/predictions/` | Predicciones de Modelado (ver `docs/modelo_sin_pkl.md`) |
-| `notebooks/` | Por etapa (etl, eda, modelado); ver `notebooks/README.md` |
+| `main.py` | Punto de entrada del ETL (comandos abajo) |
+| `config/` | Rutas, variables de entorno, conexión a la base y logs |
+| `src/` | Código del ETL: extracción, contrato de datos, transformación, carga, rendimientos y parcelas |
+| `sql/` | Migraciones de la base (tablas, vistas y rol del chatbot), en orden `001` a `007` |
+| `tests/` | Pruebas con pytest |
+| `data/raw/` | Maestro, diccionario de variables, roles de columnas y shapefile de parcelas |
+| `data/predictions/` | Predicciones de los modelos M1 a M6 |
+| `notebooks/` | Notebooks por etapa: etl, eda y modelado |
+| `docs/` | Auditoría del maestro y explicación de por qué no hay `.pkl` |
+| `logs/` | Log del ETL (`etl.log`) |
 
-## Puesta en marcha (Windows + Miniconda)
+## Cómo ejecutarlo
+
+Probado en Windows con Miniconda.
 
 ```bash
 conda activate agrocebada_env
 pip install -r requirements.txt
-copy .env.example .env          # y completa DB_PASSWORD, DB_USER, DB_HOST
-pytest -q                       # 23 pruebas en verde
-python main.py validar          # contrato sin tocar la BD
-python main.py init-db          # crea tablas, bitácora y vista (una vez, o tras cambiar sql/)
-python main.py run              # carga
-python main.py rendimientos     # rendimientos estimados (modelo vigente: ensamble_16vars)
+copy .env.example .env
 ```
 
-Códigos de salida: `0` OK, `1` error inesperado, `2` contrato violado (no se cargó nada).
+En `.env` hay que llenar las credenciales de Supabase: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_SSL`. También trae `ETL_TABLA_DESTINO`, `ETL_ESQUEMA_DESTINO` y `ETL_CHUNK_SIZE`. Opcionalmente, `ETL_MODELO_VIGENTE` cambia el modelo que se carga (por defecto `ensamble_16vars`).
 
-## Decisiones de diseño
-
-- **Parquet como fuente canónica.** El CSV pierde el tipo `boolean` con nulos (`diag_y_redondo`).
-  El pipeline acepta ambos y re-tipifica según el diccionario.
-- **Idempotencia real.** `ON CONFLICT (id_poligono) DO UPDATE ... WHERE (...) IS DISTINCT FROM (...)`:
-  si se ejecuta dos veces con el mismo maestro, la segunda reporta 0 filas afectadas y
-  conserva la fecha de carga original.
-- **Atomicidad.** Todos los chunks van en una transacción; ante cualquier error hay rollback completo.
-- **Migración desde la PoC.** `sql/001` renombra la tabla creada con `to_sql(replace)` (sin PK)
-  a `matriz_caracteristicas_poc_respaldo`; `sql/002` la recrea con PK y CHECKs.
-- **Sin borrado silencioso.** Si en la BD hay parcelas que ya no vienen en el maestro, se reportan en el log.
-- **Sin lógica de modelado en el ETL.** La imputación, el escalado y la selección de variables viven en el
-  `Pipeline` de sklearn de Modelado, para evitar fuga entre ENTRENAMIENTO y PREDICCION.
-- **Contrato estable para Django.** La app consume `v_parcelas_app` (modelo `managed = False`),
-  no la tabla, para que un cambio de esquema no rompa la web.
-
-## Si cambia el diccionario de variables
+Comandos:
 
 ```bash
-python -m src.schema > sql/002_matriz_caracteristicas.sql
+pytest -q                        # 23 pruebas
+python main.py validar           # revisa el maestro contra el contrato, sin tocar la base
+python main.py init-db           # crea tablas y vistas (una vez, o si cambia sql/)
+python main.py run               # carga el maestro a matriz_caracteristicas
+python main.py rendimientos      # carga los rendimientos del modelo vigente
+python main.py rendimientos --modelo svr_19vars   # carga otro modelo
 ```
 
-`CREATE TABLE IF NOT EXISTS` no altera una tabla existente: agregar o quitar columnas
-requiere una migración nueva (`sql/005_...sql` con `ALTER TABLE`).
+Códigos de salida: `0` correcto, `1` error inesperado, `2` el contrato falló y no se cargó nada.
+
+La carga es idempotente: si se corre dos veces con el mismo maestro, la segunda no cambia filas. Cada ejecución queda registrada en la tabla `etl_ejecuciones`.
+
+## Modelo final
+
+Métricas de validación cruzada sobre las 138 parcelas con rendimiento conocido (RMSE y MAE en t/ha):
+
+| Modelo | `--modelo` | RMSE | MAE | R² |
+|---|---|---|---|---|
+| M1 Random Forest, 62 variables | `rf_62vars` | 0.575 | 0.433 | 0.541 |
+| M2 Random Forest, 19 variables | `rf_19vars` | 0.546 | 0.416 | 0.586 |
+| M3 Random Forest con GridSearch, 19 variables | `rf_gridsearch_19vars` | 0.536 | 0.401 | 0.601 |
+| M4 SVR RBF, 19 variables | `svr_19vars` | 0.510 | 0.390 | 0.638 |
+| M5 Ensamble, 19 variables | `ensamble_19vars` | 0.506 | 0.386 | 0.644 |
+| M6 Ensamble, 16 variables (usado) | `ensamble_16vars` | 0.486 | 0.374 | 0.672 |
+
+El modelo usado es M6: 0.16 Random Forest + 0.84 SVR con 16 variables elegidas por selección hacia atrás.
+
+No se exportó el modelo entrenado (`.pkl`). La app no hace inferencia, solo lee las predicciones ya cargadas. Los detalles están en `docs/modelo_sin_pkl.md`.
+
+## Más información
+
+- Orden y descripción de los notebooks: [notebooks/README.md](notebooks/README.md)
+- Auditoría del maestro: [docs/auditoria_maestro_2026-10-11.md](docs/auditoria_maestro_2026-10-11.md)
+- Predicciones sin `.pkl` y lista de modelos: [docs/modelo_sin_pkl.md](docs/modelo_sin_pkl.md)
