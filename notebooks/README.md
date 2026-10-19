@@ -25,9 +25,15 @@ Notas:
 |---|---|
 | `01_eda.ipynb` | Análisis exploratorio de la matriz de características. |
 
-## modelado/ : entrenamiento y comparación de modelos (Edgardo)
+## modelado/ : selección de variables, modelos y predicciones (Edgardo)
 
-| Notebook | Qué hace |
-|---|---|
-| `02_preprocesamiento_rf.ipynb` | Preprocesamiento y primeras pruebas con Random Forest. |
-| (pendiente) | Notebooks de Edgardo con la selección de variables y el ensamble final de 16 variables (M6). |
+| Orden | Notebook | Qué hace | Lee | Escribe |
+|---|---|---|---|---|
+| 1 | `01_preprocesamiento.ipynb` | Lee `matriz_caracteristicas` de Supabase (credenciales del `.env`), quita 11 variables redundantes, deja 51 predictoras y crea `grupo_rend` (KMeans de 2 grupos sobre el rendimiento) para estratificar la validación cruzada. | Supabase | `dataset_modelo.csv` (197 x 58) |
+| 2 | `02_modelado_ensamble_svr.ipynb` | Validación cruzada estratificada de 5 pliegues. Compara Random Forest con importancia por permutación (19 variables), Random Forest con GridSearchCV, el ensamble RF + SVR y la selección hacia atrás (SBE), que deja 16 variables. Predice las 59 parcelas, grafica el diagnóstico y responde las preguntas bonus. | `dataset_modelo.csv`, `dataset_62vars.csv` | `comparacion_rendimientos.csv`, `dataset_rendimientos_estimados.csv`, `Diagnostico_Final_Ensamble_16vars.png` |
+
+Notas:
+- El modelo final es el ensamble de 16 variables (0.16 Random Forest + 0.84 SVR): en validación cruzada R² 0.672, MAE 0.374 t/ha y RMSE 0.486 t/ha. En `comparacion_rendimientos.csv` es la columna `M6_Ensamble_Final_SBE_16vars`.
+- Las salidas del paso 2 se copian a `data/predictions/` (`comparacion_modelos_rendimiento.csv` y `rendimientos_estimados.csv`). Luego `python main.py rendimientos` las carga a Supabase para la app.
+- `dataset_62vars.csv` trae las 62 variables originales para reproducir el modelo base (M1).
+- Necesita `python-dotenv` y un `.env` con `DB_USER`, `DB_PASSWORD` y `DB_HOST` (ver `.env.example`).
