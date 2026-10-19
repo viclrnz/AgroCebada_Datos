@@ -29,6 +29,7 @@ Notas:
 
 | Orden | Notebook | Qué hace | Lee | Escribe |
 |---|---|---|---|---|
+| 0 | `00_random_forest_base.ipynb` | Línea base y comparación: Random Forest con 51 variables, selección por SHAP (12 variables), torneo de algoritmos y SVR de 12 variables (modelo anterior, superado por el ensamble de 16). Lee `dataset_greedy.csv`. Sus conclusiones del bonus quedan superadas por 02. | `dataset_greedy.csv` | `dataset_comparacion_rendimientos.csv`, `dataset_rendimientos_estimados.csv` |
 | 1 | `01_preprocesamiento.ipynb` | Lee `matriz_caracteristicas` de Supabase (credenciales del `.env`), quita 11 variables redundantes, deja 51 predictoras y crea `grupo_rend` (KMeans de 2 grupos sobre el rendimiento) para estratificar la validación cruzada. | Supabase | `dataset_modelo.csv` (197 x 58) |
 | 2 | `02_modelado_ensamble_svr.ipynb` | Validación cruzada estratificada de 5 pliegues. Compara Random Forest con importancia por permutación (19 variables), Random Forest con GridSearchCV, el ensamble RF + SVR y la selección hacia atrás (SBE), que deja 16 variables. Predice las 59 parcelas, grafica el diagnóstico y responde las preguntas bonus. | `dataset_modelo.csv`, `dataset_62vars.csv` | `comparacion_rendimientos.csv`, `dataset_rendimientos_estimados.csv`, `Diagnostico_Final_Ensamble_16vars.png` |
 
