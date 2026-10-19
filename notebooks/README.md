@@ -2,7 +2,7 @@
 
 Están separados por etapa y se corren en el orden de las tablas.
 
-## etl/ : matriz de características (Dana)
+## etl/ : matriz de características
 
 Las tablas intermedias se guardan en `data/interim/`. El resultado final se copia a `data/raw/` y de ahí lo carga `python main.py run`.
 
@@ -25,7 +25,7 @@ Notas:
 |---|---|
 | `01_eda.ipynb` | Análisis exploratorio de la matriz de características. |
 
-## modelado/ : modelos y predicciones (Edgardo)
+## modelado/ : modelos y predicciones
 
 | Orden | Notebook | Qué hace | Lee | Escribe |
 |---|---|---|---|---|
