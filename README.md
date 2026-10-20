@@ -31,12 +31,17 @@ De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Pa
 Probado en Windows con Miniconda.
 
 ```bash
+conda create -n agrocebada_env python=3.12 -y
 conda activate agrocebada_env
 pip install -r requirements.txt
 copy .env.example .env
 ```
 
+En Linux o macOS se usa `cp` en lugar de `copy`.
+
 En `.env` hay que llenar las credenciales de Supabase: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_SSL`. También trae `ETL_TABLA_DESTINO`, `ETL_ESQUEMA_DESTINO` y `ETL_CHUNK_SIZE`. Opcionalmente, `ETL_MODELO_VIGENTE` cambia el modelo que se carga (por defecto `ensamble_16vars`).
+
+Solo `init-db`, `run` y `rendimientos` necesitan las credenciales. `pytest` y `python main.py validar` funcionan sin ellas.
 
 Comandos:
 
