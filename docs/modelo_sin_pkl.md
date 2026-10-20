@@ -6,7 +6,7 @@ predicciones ya calculadas en `data/predictions/`:
 | Archivo | Contenido |
 |---|---|
 | `comparacion_modelos_rendimiento.csv` | Las 197 parcelas con el rendimiento observado y la predicción de cada modelo (del Modelo base al Modelo 5). En ENTRENAMIENTO son predicciones de validación cruzada. Es la entrada de `python main.py rendimientos`. |
-| `rendimientos_estimados.csv` | Referencia del valor mostrado con el Modelo 5 (Ensamble Final tras selección de variables SBE, 16 variables). Una prueba verifica que la carga lo reproduce con 2 decimales. |
+| `rendimientos_estimados.csv` | Referencia del valor mostrado con el Modelo 5 (Ensamble Final tras selección de variables SBE, 16 variables). Las 59 parcelas de PREDICCION van redondeadas a 2 decimales, igual que en la carga. Una prueba verifica que la carga lo reproduce. |
 
 ## Consecuencias
 
@@ -25,7 +25,7 @@ Métricas sobre las 138 parcelas de ENTRENAMIENTO (validación cruzada):
 | Modelo de prueba: SVR con StandardScaler y kernel RBF (19 variables predictoras) | `svr_19vars` | M4_SVR_RBF_19vars | 0.510 | 0.390 | 0.638 |
 | Modelo 3: Ensamble con Blending: 0.27 Random Forest + 0.73 SVR (19 variables predictoras) | `ensamble_19vars` | M5_Ensamble_19vars_27RF_73SVR | 0.506 | 0.386 | 0.644 |
 | Modelo 4: Ensamble con Blending + Selección de Variables con Sequential Backward Elimination (16 variables predictoras) | sin clave | sin columna | 0.486 | no reportado | 0.671 |
-| Modelo 5: Ensamble Final tras selección de variables SBE (16 variables predictoras) (vigente) | `ensamble_16vars` | M6_Ensamble_Final_SBE_16vars | 0.486 | 0.374 | 0.672 |
+| Modelo 5: Ensamble Final tras selección de variables SBE (16 variables predictoras) (usado) | `ensamble_16vars` | M6_Ensamble_Final_SBE_16vars | 0.486 | 0.374 | 0.672 |
 
 - Las predicciones se reproducen con los notebooks de `notebooks/` (`random_state=42`).
 - Si más adelante existe un `.pkl`, va en `models/` (ignorado por git) y se sustituye este paso por la inferencia.

@@ -21,8 +21,15 @@ data/interim/
 data/processed/
 
 # Artefactos de modelo.
+models/
 *.pkl
 *.joblib
+
+# Salidas de los notebooks de modelado (las entradas de data/modelado/ sí se versionan).
+data/modelado/comparacion_rendimientos.csv
+data/modelado/dataset_comparacion_rendimientos.csv
+data/modelado/dataset_rendimientos_estimados*.csv
+data/modelado/*.png
 
 # SO / IDE.
 .DS_Store

@@ -6,7 +6,7 @@ De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Pa
 
 ## Flujo
 
-1. Los notebooks de `notebooks/etl/` generan el maestro (`data/raw/maestro_agrocebada.parquet`), el diccionario de variables y los roles de columnas.
+1. Los notebooks de `notebooks/etl/` generan el maestro, el diccionario de variables y los roles de columnas en `data/processed/`. De ahí se copian a `data/raw/` (`data/raw/maestro_agrocebada.parquet`).
 2. `python main.py run` valida el maestro contra un contrato de datos y lo carga a la tabla `matriz_caracteristicas`.
 3. Los notebooks de `notebooks/modelado/` entrenan los modelos y dejan las predicciones en `data/predictions/`.
 4. `python main.py rendimientos` toma las predicciones del modelo elegido, agrega ubicación y superficie desde el shapefile y las carga a `rendimientos_estimados`, que es lo que lee la app.

@@ -42,4 +42,4 @@ Notas:
 - El modelo final es el Modelo 5: Ensamble Final tras selección de variables SBE (16 variables predictoras), 0.16 Random Forest + 0.84 SVR. En `comparacion_rendimientos.csv` es la columna `M6_Ensamble_Final_SBE_16vars`. Las métricas están en el [README principal](../README.md#modelo-final).
 - Las salidas del paso 2 se copian a `data/predictions/` como `comparacion_modelos_rendimiento.csv` y `rendimientos_estimados.csv`. Luego `python main.py rendimientos` las carga a Supabase.
 - `dataset_62vars.csv` trae las 62 variables originales para reproducir el Modelo base (Random Forest Original, 62 variables).
-- El notebook 01 necesita `python-dotenv` y un `.env` con `DB_USER`, `DB_PASSWORD` y `DB_HOST` (ver `.env.example`).
+- El notebook 01 necesita `python-dotenv` y un `.env` con `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` y `DB_NAME` (ver `.env.example`).
