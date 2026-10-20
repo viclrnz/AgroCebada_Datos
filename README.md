@@ -21,6 +21,7 @@ De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Pa
 | `sql/` | Migraciones de la base (tablas, vistas y rol del chatbot), en orden `001` a `007` |
 | `tests/` | Pruebas con pytest |
 | `data/raw/` | Maestro, diccionario de variables, roles de columnas y shapefile de parcelas |
+| `data/modelado/` | Datos de entrada de los notebooks de modelado |
 | `data/predictions/` | Predicciones de los modelos (del Modelo base al Modelo 5) |
 | `notebooks/` | Notebooks por etapa: etl, eda y modelado |
 | `docs/` | Auditoría del maestro y explicación de por qué no hay `.pkl` |
@@ -91,20 +92,23 @@ Están en `notebooks/`, separados por etapa:
 | `notebooks/eda/` | `01_eda` |
 | `notebooks/modelado/` | `00_random_forest_base`, `01_preprocesamiento`, `02_modelado_ensamble_svr` |
 
-Para abrirlos:
+Para abrirlos, desde la carpeta del repositorio:
 
 ```bash
-jupyter notebook notebooks/
+jupyter notebook
 ```
 
-También se pueden abrir en VS Code con el entorno `agrocebada_env`.
+y entrar a `notebooks/`. También se pueden abrir en VS Code con el entorno `agrocebada_env`.
+
+Las rutas son relativas al repositorio: cada notebook busca la carpeta que tiene `main.py` y arma las rutas desde ahí, así que no hay que cambiarlas.
 
 Todos tienen guardadas sus salidas, así que se pueden leer sin correrlos. Para correrlos de nuevo:
 
-- `etl/01_base_limpia` necesita los datos oficiales del reto; hay que poner su carpeta en `DIR_DATOS`.
-- `etl/03_externas` necesita una cuenta de Google Earth Engine y un proyecto propio en `PROYECTO_EE`.
+- `modelado/00` y `modelado/02` corren con lo que ya está en el repositorio. Sus datos de entrada están en `data/modelado/` (`dataset_greedy.csv`, `dataset_modelo.csv` y `dataset_62vars.csv`).
 - `eda/01_eda` y `modelado/01_preprocesamiento` leen de Supabase, así que necesitan el `.env` con credenciales.
-- `modelado/00` y `modelado/02` leen sus CSV de entrada de una carpeta `Proyecto AgroCebada` que no está en el repositorio.
+- `etl/01_base_limpia` necesita los datos oficiales del reto, que no están en el repositorio. Hay que poner su carpeta en `DIR_DATOS`, en la celda de configuración del inicio.
+- `etl/03_externas` necesita una cuenta de Google Earth Engine. Hay que poner el ID de un proyecto propio en `PROYECTO_EE`.
+- `etl/02_fenologia` y `etl/03_externas` leen las tablas que deja `etl/01_base_limpia` en `data/interim/`, que tampoco están en el repositorio.
 
 El detalle de cada notebook (qué lee y qué escribe) está en [notebooks/README.md](notebooks/README.md).
 
