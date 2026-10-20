@@ -1,5 +1,14 @@
 # AgroCebada_Datos
 
+<p align="center">
+  <a href="https://agrocebada-alss.onrender.com/"><img src="https://img.shields.io/badge/Ver%20la%20aplicaci%C3%B3n-en%20l%C3%ADnea-2e7d32?style=for-the-badge" alt="Ver la aplicación en línea"></a>
+  <a href="https://github.com/viclrnz/AgroCebada"><img src="https://img.shields.io/badge/Repositorio-de%20la%20app-24292e?style=for-the-badge&logo=github" alt="Repositorio de la app"></a>
+</p>
+
+> **Aplicación en línea:** [https://agrocebada-alss.onrender.com/](https://agrocebada-alss.onrender.com/)<br>
+> **Repositorio de la aplicación (Django + React):** [https://github.com/viclrnz/AgroCebada](https://github.com/viclrnz/AgroCebada)<br>
+> La aplicación está en un servidor gratuito: la primera carga puede tardar alrededor de un minuto mientras el servidor despierta.
+
 ETL y datos del Reto AgroCebada 2026 (FIRA), equipo SocieData. El repositorio arma la matriz de características de 197 parcelas de cebada, la valida y la carga a PostgreSQL en Supabase, que es la base que usa la app web.
 
 De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Para las otras 59 el rendimiento se estima con el modelo final.
