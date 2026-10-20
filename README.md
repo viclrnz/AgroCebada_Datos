@@ -26,27 +26,50 @@ De las 197 parcelas, 138 tienen rendimiento conocido y se usan para entrenar. Pa
 | `docs/` | Auditoría del maestro y explicación de por qué no hay `.pkl` |
 | `logs/` | Log del ETL (`etl.log`) |
 
-## Cómo ejecutarlo
+## Cómo probarlo
 
-Probado en Windows con Miniconda.
+Probado en Windows con Miniconda y Python 3.12.
+
+### 1. Requisitos y descarga
+
+Hace falta Miniconda (o Anaconda) y Git.
+
+```bash
+git clone https://github.com/viclrnz/AgroCebada_Datos.git
+cd AgroCebada_Datos
+```
+
+### 2. Crear el entorno
 
 ```bash
 conda create -n agrocebada_env python=3.12 -y
 conda activate agrocebada_env
 pip install -r requirements.txt
+```
+
+`requirements.txt` solo trae lo del ETL. Para abrir y correr los notebooks hay que instalar además:
+
+```bash
+pip install notebook matplotlib seaborn scipy scikit-learn statsmodels shap xgboost
+pip install geopandas rasterio pyproj exactextract earthengine-api   # solo para notebooks/etl
+```
+
+### 3. Configurar `.env`
+
+```bash
 copy .env.example .env
 ```
 
 En Linux o macOS se usa `cp` en lugar de `copy`.
 
-En `.env` hay que llenar las credenciales de Supabase: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_SSL`. También trae `ETL_TABLA_DESTINO`, `ETL_ESQUEMA_DESTINO` y `ETL_CHUNK_SIZE`. Opcionalmente, `ETL_MODELO_VIGENTE` cambia el modelo que se carga (por defecto `ensamble_16vars`).
+En `.env` van las credenciales de Supabase: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_SSL`. Se las pueden pedir al equipo. También trae `ETL_TABLA_DESTINO`, `ETL_ESQUEMA_DESTINO` y `ETL_CHUNK_SIZE`. Opcionalmente, `ETL_MODELO_VIGENTE` cambia el modelo que se carga (por defecto `ensamble_16vars`).
 
 Solo `init-db`, `run` y `rendimientos` necesitan las credenciales. `pytest` y `python main.py validar` funcionan sin ellas.
 
-Comandos:
+### 4. Probar el ETL
 
 ```bash
-pytest -q                        # 23 pruebas
+pytest -q                        # 23 pruebas, sin base de datos
 python main.py validar           # revisa el maestro contra el contrato, sin tocar la base
 python main.py init-db           # crea tablas y vistas (una vez, o si cambia sql/)
 python main.py run               # carga el maestro a matriz_caracteristicas
@@ -57,6 +80,39 @@ python main.py rendimientos --modelo svr_19vars   # carga otro modelo
 Códigos de salida: `0` correcto, `1` error inesperado, `2` el contrato falló y no se cargó nada.
 
 La carga es idempotente: si se corre dos veces con el mismo maestro, la segunda no cambia filas. Cada ejecución queda registrada en la tabla `etl_ejecuciones`.
+
+### 5. Revisar los notebooks
+
+Están en `notebooks/`, separados por etapa:
+
+| Carpeta | Notebooks, en orden |
+|---|---|
+| `notebooks/etl/` | `01_base_limpia`, `02_fenologia`, `03_externas` (el final de `02_fenologia` va después de `03_externas`) |
+| `notebooks/eda/` | `01_eda` |
+| `notebooks/modelado/` | `00_random_forest_base`, `01_preprocesamiento`, `02_modelado_ensamble_svr` |
+
+Para abrirlos:
+
+```bash
+jupyter notebook notebooks/
+```
+
+También se pueden abrir en VS Code con el entorno `agrocebada_env`.
+
+Todos tienen guardadas sus salidas, así que se pueden leer sin correrlos. Para correrlos de nuevo:
+
+- `etl/01_base_limpia` necesita los datos oficiales del reto; hay que poner su carpeta en `DIR_DATOS`.
+- `etl/03_externas` necesita una cuenta de Google Earth Engine y un proyecto propio en `PROYECTO_EE`.
+- `eda/01_eda` y `modelado/01_preprocesamiento` leen de Supabase, así que necesitan el `.env` con credenciales.
+- `modelado/00` y `modelado/02` leen sus CSV de entrada de una carpeta `Proyecto AgroCebada` que no está en el repositorio.
+
+El detalle de cada notebook (qué lee y qué escribe) está en [notebooks/README.md](notebooks/README.md).
+
+### 6. Dónde quedan los resultados
+
+- `data/predictions/rendimientos_estimados.csv`: rendimiento por parcela (197 parcelas) con el modelo final.
+- `data/predictions/comparacion_modelos_rendimiento.csv`: predicciones de cada modelo, una columna por modelo.
+- En Supabase, la tabla `rendimientos_estimados`, que es la que lee la app web.
 
 ## Modelo final
 
